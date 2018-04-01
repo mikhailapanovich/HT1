@@ -13,16 +13,10 @@ public class ManagePage {
 
     private By dt_locator = By.cssSelector("dt");
     private By dd_locator = By.cssSelector("dd");
-    private By manageUsers_link = By.xpath("//a/dl/dt[text()='" + "']");
 
     public ManagePage(WebDriver driver, String host) {
         this.driver = driver;
         this.host = host;
-    }
-
-    public ManagePage clickOnHrefWithText(String text) {
-        driver.findElement(By.xpath("//a[text()='" + text + "']")).click();
-        return this;
     }
 
     public boolean isTextPresentInTag(String text, By locator) {
@@ -35,12 +29,17 @@ public class ManagePage {
         return false;
     }
 
-    public boolean isTextPresentInDt(String text) {
+    public boolean isDtPresentWithText(String text) {
         return isTextPresentInTag(text, dt_locator);
     }
 
-    public boolean isTextPresentInDd(String text) {
+    public boolean isDdPresentWithText(String text) {
         return isTextPresentInTag(text, dd_locator);
+    }
+
+    public ManagePage clickOnHrefWithDescendantDtWithText(String text) {
+        driver.findElement(By.xpath("//dt[text()='" + text + "']/ancestor::a")).click();
+        return this;
     }
 
     public void waitForLoad(WebDriver driver) {

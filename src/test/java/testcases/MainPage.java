@@ -15,6 +15,7 @@ public class MainPage {
     private By usernameLocator = By.id("j_username");
     private By passwordLocator = By.name("j_password");
     private By submitButtonLocator = By.id("yui-gen1-button");
+    private By manageJenkinsLocator = By.xpath("//a[text()='Manage Jenkins']");
 
     public MainPage(WebDriver driver, String baseUrl) {
         this.driver = driver;
@@ -35,8 +36,9 @@ public class MainPage {
         return this;
     }
 
-    public MainPage clickOnHrefWithText(String text) {
-        driver.findElement(By.xpath("//a[text()='" + text + "']")).click();
+    public MainPage clickOnManageJenkins() {
+        waitForLoad(driver);
+        driver.findElement(manageJenkinsLocator).click();
         return this;
     }
 
