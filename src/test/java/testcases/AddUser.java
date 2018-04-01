@@ -1,16 +1,10 @@
 package testcases;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.FindBys;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public class AddUser {
@@ -20,8 +14,92 @@ public class AddUser {
     @FindBy(xpath = "//form[@method='post']")
     private List<WebElement> forms;
 
+    @FindBy(xpath = "//button[@type='button']")
+    private WebElement submit_button;
+
+    @FindBy(name = "username")
+    private WebElement username;
+
+    @FindBy(name = "password1")
+    private WebElement password1;
+
+    @FindBy(name = "password2")
+    private WebElement password2;
+
+    @FindBy(name = "fullname")
+    private WebElement fullname;
+
+    @FindBy(name = "email")
+    private WebElement email;
+
+
     public AddUser(WebDriver driver) {
         this.driver = driver;
+    }
+
+    public String sendForm(String username, String password, String confirmPassword, String fullname, String email) {
+        StringBuilder message = new StringBuilder();
+        message.append(setUsername(username));
+        message.append(setPassword(password));
+        message.append(confrimPassword(confirmPassword));
+        message.append(setFullname(fullname));
+        message.append(setEmail(email));
+        message.append(submitForm());
+        return message.toString();
+    }
+
+    public String submitForm() {
+        try {
+            submit_button.click();
+        } catch (NoSuchElementException e) {
+            return "Cannot submit form: there is no such element present!\n";
+        }
+        return "";
+    }
+
+    public String setUsername(String value) {
+        try {
+            username.sendKeys(value);
+        } catch (NoSuchElementException e) {
+            return "Cannot set username: there is no such element present!\n";
+        }
+        return "";
+    }
+
+    public String setFullname(String value) {
+        try {
+            fullname.sendKeys(value);
+        } catch (NoSuchElementException e) {
+            return "Cannot set fullname: there is no such element present\n";
+        }
+        return "";
+    }
+
+    public String setPassword(String value) {
+        try {
+            password1.sendKeys(value);
+        } catch (NoSuchElementException e) {
+            return "Cannot set username: there is no such element present\n";
+        }
+        return "";
+    }
+
+    public String confrimPassword(String value) {
+        try {
+            password2.sendKeys(value);
+        } catch (NoSuchElementException e) {
+            return "Cannot set password: there is no such element present\n";
+        }
+        return "";
+    }
+
+    public String setEmail(String value) {
+        try {
+            email.sendKeys(value);
+        } catch (NoSuchElementException e) {
+            return "Cannot set email: there is no such element present\n";
+        }
+        return "";
     }
 
     public String getMessageForFormPresent() {
