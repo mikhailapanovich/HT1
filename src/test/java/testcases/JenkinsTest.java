@@ -18,8 +18,8 @@ import static org.testng.Assert.assertTrue;
 public class JenkinsTest {
     private String host = "http://localhost:8080";
     private String chromeDriverPath = "d:\\Portable_Programms\\drivers\\chromedriver.exe";
-    StringBuffer verificationErrors = new StringBuffer();
-    WebDriver driver = null;
+    private WebDriver driver = null;
+    private StringBuffer verificationErrors = new StringBuffer();
 
     @BeforeClass
     public void beforeClass() throws Exception {
@@ -46,11 +46,18 @@ public class JenkinsTest {
     }
 
     @Test
+    public void tst_temp() {
+        SecurityRealmPage securityRealmPage = PageFactory.initElements(driver, SecurityRealmPage.class);
+        securityRealmPage.goToThisPage();
+    }
+
+    @Test
     public void tst_newUserLifeCycle() {
         MainPage mainPage = new MainPage(driver, host);
         ManagePage managePage = new ManagePage(driver, host);
         SecurityRealmPage securityRealmPage = PageFactory.initElements(driver, SecurityRealmPage.class);
         AddUser addUser = PageFactory.initElements(driver, AddUser.class);
+        String value;
 
         // 1 После клика по ссылке «Manage Jenkins» на странице появляется элемент dt с текстом «Manage Users»
         // и элемент dd с текстом «Create/delete/modify users that can log in to this Jenkins».
@@ -73,7 +80,9 @@ public class JenkinsTest {
         // «E-mail address» = «some@addr.dom») и клика по кнопке с надписью «Create User»
         // на странице появляется строка таблицы (элемент tr),
         // в которой есть ячейка (элемент td) с текстом «someuser».
-        
+        verificationErrors.append(addUser.sendForm("someuser", "somepassword", "somepassword", "Some Full Name", "some@addr.dom"));
+        value = "someuser";
+        assertTrue(securityRealmPage.isTableDataPresent(value), "There is no [" + value + "] in table data");
 
         // 5 После клика по ссылке с атрибутом href равным «user/someuser/delete»
         // появляется текст «Are you sure about deleting the user from Jenkins?».
