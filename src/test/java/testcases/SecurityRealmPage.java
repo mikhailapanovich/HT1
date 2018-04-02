@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class SecurityRealmPage {
     private final WebDriver driver;
+    private String host = "http://localhost:8080";
 
     // Page elements templates
     @FindBy(xpath = "//body")
@@ -29,8 +30,24 @@ public class SecurityRealmPage {
     }
 
     public SecurityRealmPage goToThisPage() {
-        driver.get("localhost:8080/securityRealm");
+        driver.get(host + "/securityRealm");
         return this;
+    }
+
+    public SecurityRealmPage goToDeleteUserPage() {
+        driver.get(host + "/securityRealm/user/123/delete");
+        return this;
+    }
+
+    public String getButtonColor() {
+        return confirmDeleteUser.getCssValue("background-color");
+    }
+
+    public String errorMessageButtonColor() {
+        if (!getButtonColor().equals("rgba(75, 117, 139, 1)")) {
+            return "The Button color is not equal to #4b758b!";
+        }
+        return "";
     }
 
     public boolean isCreateUserPresent() {
@@ -87,6 +104,10 @@ public class SecurityRealmPage {
             return false;
         }
         return true;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public void waitForLoad() {

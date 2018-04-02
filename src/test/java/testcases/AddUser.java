@@ -8,6 +8,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.util.List;
 
 public class AddUser {
+    private String host = "http://localhost:8080";
     private final WebDriver driver;
 
     // Page elements templates
@@ -35,6 +36,22 @@ public class AddUser {
 
     public AddUser(WebDriver driver) {
         this.driver = driver;
+    }
+
+    public AddUser goToThisPage() {
+        driver.get(host + "/securityRealm/addUser");
+        return this;
+    }
+
+    public String getButtonColor() {
+        return submit_button.getCssValue("background-color");
+    }
+
+    public String errorMessageButtonColor() {
+        if (!getButtonColor().equals("rgba(75, 117, 139, 1)")) {
+            return "The Button color is not equal to #4b758b!";
+        }
+        return "";
     }
 
     public String sendForm(String username, String password, String confirmPassword, String fullname, String email) {
@@ -102,7 +119,7 @@ public class AddUser {
         return "";
     }
 
-    public String getMessageForFormPresent() {
+    public String getErrorMessageForFormPresent() {
         StringBuilder message = new StringBuilder();
         boolean form_found = false;
 
@@ -148,6 +165,10 @@ public class AddUser {
         }
 
         return message.toString();
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public void waitForLoad(WebDriver driver) {

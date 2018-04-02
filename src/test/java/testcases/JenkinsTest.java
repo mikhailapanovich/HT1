@@ -20,9 +20,9 @@ public class JenkinsTest {
     private String host = "http://localhost:8080";
     private String chromeDriverPath = "d:\\Portable_Programms\\drivers\\chromedriver.exe";
     private WebDriver driver = null;
-    private StringBuffer verificationErrors;
+    private StringBuffer verificationErrors = new StringBuffer();
 
-    @BeforeClass
+    @BeforeClass(enabled = true)
     public void beforeClass() throws Exception {
         ChromeOptions options = new ChromeOptions();
         ChromeDriverService service = new ChromeDriverService.Builder()
@@ -39,16 +39,19 @@ public class JenkinsTest {
 
     @AfterClass
     public void afterClass() {
-        //driver.quit();
+        driver.quit();
     }
 
     @Test
-    public void tst_temp() {
+    public void tst_buttonColors() {
+        AddUser addUser = PageFactory.initElements(driver, AddUser.class);
         SecurityRealmPage securityRealmPage = PageFactory.initElements(driver, SecurityRealmPage.class);
-        securityRealmPage.goToThisPage();
-        securityRealmPage.clickOnDeleteUser();
-        String value = "Are you sure about deleting the user from Jenkins?";
-        assertTrue(securityRealmPage.pageTextContains(value), "Expected to find [" + value + "]");
+
+        addUser.goToThisPage();
+        verificationErrors.append(addUser.errorMessageButtonColor());
+
+        securityRealmPage.goToDeleteUserPage();
+        verificationErrors.append(securityRealmPage.errorMessageButtonColor());
     }
 
     @Test
@@ -57,7 +60,6 @@ public class JenkinsTest {
         ManagePage managePage = new ManagePage(driver, host);
         SecurityRealmPage securityRealmPage = PageFactory.initElements(driver, SecurityRealmPage.class);
         AddUser addUser = PageFactory.initElements(driver, AddUser.class);
-        verificationErrors = new StringBuffer();
         String value;
 
         // 1 После клика по ссылке «Manage Jenkins» на странице появляется элемент dt с текстом «Manage Users»
@@ -74,7 +76,7 @@ public class JenkinsTest {
         // 3 После клика по ссылке «Create User» появляется форма с тремя полями типа text
         // и двумя полями типа password, причём все поля должны быть пустыми.
         securityRealmPage.clickOnCreateUser();
-        verificationErrors.append(addUser.getMessageForFormPresent());
+        verificationErrors.append(addUser.getErrorMessageForFormPresent());
 
         // 4 После заполнения полей формы («Username» = «someuser», «Password» = «somepassword»,
         // «Confirm password» = «somepassword», «Full name» = «Some Full Name»,
