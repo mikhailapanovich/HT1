@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-public class AddUser {
+public class AddUserPage {
     private String host = "http://localhost:8080";
     private final WebDriver driver;
 
@@ -34,11 +34,11 @@ public class AddUser {
     private WebElement email;
 
 
-    public AddUser(WebDriver driver) {
+    public AddUserPage(WebDriver driver) {
         this.driver = driver;
     }
 
-    public AddUser goToThisPage() {
+    public AddUserPage goToThisPage() {
         driver.get(host + "/securityRealm/addUser");
         return this;
     }

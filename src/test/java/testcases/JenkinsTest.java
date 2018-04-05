@@ -19,6 +19,9 @@ import static org.testng.Assert.assertTrue;
 public class JenkinsTest {
     private String host = "http://localhost:8080";
     private String chromeDriverPath = "d:\\Portable_Programms\\drivers\\chromedriver.exe";
+    private String username = "admin";
+    private String pass = "admin";
+
     private WebDriver driver = null;
     private StringBuffer verificationErrors = new StringBuffer();
 
@@ -34,7 +37,7 @@ public class JenkinsTest {
 
         // open jenkins, authorize
         MainPage mainPage = new MainPage(driver, host);
-        mainPage.goToThisPage().authorize("admin", "admin");
+        mainPage.goToThisPage().authorize(username, pass);
     }
 
     @AfterClass
@@ -44,11 +47,11 @@ public class JenkinsTest {
 
     @Test
     public void tst_buttonColors() {
-        AddUser addUser = PageFactory.initElements(driver, AddUser.class);
+        AddUserPage addUserPage = PageFactory.initElements(driver, AddUserPage.class);
         SecurityRealmPage securityRealmPage = PageFactory.initElements(driver, SecurityRealmPage.class);
 
-        addUser.goToThisPage();
-        verificationErrors.append(addUser.errorMessageButtonColor());
+        addUserPage.goToThisPage();
+        verificationErrors.append(addUserPage.errorMessageButtonColor());
 
         securityRealmPage.goToDeleteUserPage();
         verificationErrors.append(securityRealmPage.errorMessageButtonColor());
@@ -59,11 +62,12 @@ public class JenkinsTest {
         MainPage mainPage = new MainPage(driver, host);
         ManagePage managePage = new ManagePage(driver, host);
         SecurityRealmPage securityRealmPage = PageFactory.initElements(driver, SecurityRealmPage.class);
-        AddUser addUser = PageFactory.initElements(driver, AddUser.class);
+        AddUserPage addUser = PageFactory.initElements(driver, AddUserPage.class);
         String value;
 
         // 1 После клика по ссылке «Manage Jenkins» на странице появляется элемент dt с текстом «Manage Users»
         // и элемент dd с текстом «Create/delete/modify users that can log in to this Jenkins».
+        mainPage.goToThisPage();
         mainPage.clickOnManageJenkins();
         assertTrue(managePage.isDtPresentWithText("Manage Users"));
         assertTrue(managePage.isDdPresentWithText("Create/delete/modify users that can log in to this Jenkins"));
