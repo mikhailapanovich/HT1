@@ -33,6 +33,9 @@ public class AddUserPage {
     @FindBy(name = "email")
     private WebElement email;
 
+    @FindBy(xpath = "//div[@class='error']")
+    private WebElement error;
+
 
     public AddUserPage(WebDriver driver) {
         this.driver = driver;
@@ -169,6 +172,15 @@ public class AddUserPage {
 
     public void setHost(String host) {
         this.host = host;
+    }
+
+    public boolean isProhibited() {
+        try {
+            System.out.println(error.getText());
+            return error.getText().contains("\"\" is prohibited as a username for security reasons.");
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public void waitForLoad(WebDriver driver) {

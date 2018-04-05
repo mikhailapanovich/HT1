@@ -40,7 +40,7 @@ public class JenkinsTest {
         mainPage.goToThisPage().authorize(username, pass);
     }
 
-    @AfterClass
+    @AfterClass(enabled = true)
     public void afterClass() {
         driver.quit();
     }
@@ -87,9 +87,9 @@ public class JenkinsTest {
         // «E-mail address» = «some@addr.dom») и клика по кнопке с надписью «Create User»
         // на странице появляется строка таблицы (элемент tr),
         // в которой есть ячейка (элемент td) с текстом «someuser».
-        verificationErrors.append(addUser.sendForm("someuser", "somepassword", "somepassword", "Some Full Name", "some@addr.dom"));
-        value = "someuser";
-        assertTrue(securityRealmPage.isTableDataPresent(value), "There is no [" + value + "] in table data");
+        String username = "someuser";
+        verificationErrors.append(addUser.sendForm(username, "somepassword", "somepassword", "Some Full Name", "some@addr.dom"));
+        assertTrue(securityRealmPage.isTableDataPresent(username), "There is no [" + username + "] in table data");
 
         // 5 После клика по ссылке с атрибутом href равным «user/someuser/delete»
         // появляется текст «Are you sure about deleting the user from Jenkins?».
@@ -101,8 +101,7 @@ public class JenkinsTest {
         // с ячейкой (элемент td) с текстом «someuser». На странице отсутствует ссылка
         // с атрибутом href равным «user/someuser/delete».
         securityRealmPage.clickYes();
-        value = "someuser";
-        assertFalse(securityRealmPage.isTableDataPresent(value), "There is [" + value + "] in table data!");
+        assertFalse(securityRealmPage.isTableDataPresent(username), "There is [" + username + "] in table data!");
         assertFalse(securityRealmPage.isDeleteUserPresent(), "There is href with [user/someuser/delete] present!");
 
 
@@ -117,9 +116,24 @@ public class JenkinsTest {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     public void tst_createUserWithBlankName() {
+        MainPage mainPage = new MainPage(driver, host);
+        ManagePage managePage = new ManagePage(driver, host);
+        SecurityRealmPage securityRealmPage = PageFactory.initElements(driver, SecurityRealmPage.class);
+        AddUserPage addUser = PageFactory.initElements(driver, AddUserPage.class);
 
+        mainPage.goToThisPage();
+        mainPage.clickOnManageJenkins();
+        managePage.clickOnHrefWithDescendantDtWithText("Manage Users");
+        securityRealmPage.clickOnCreateUser();
+        addUser.sendForm("", "somepassword", "somepassword", "Some Full Name", "some@addr.dom");
+        assertTrue(addUser.isProhibited());
+
+        String verificationErrorString = verificationErrors.toString();
+        if (!"".equals(verificationErrorString)) {
+            Assert.fail(verificationErrorString);
+        }
     }
 
     @Test(enabled = false)
